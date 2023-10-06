@@ -6,7 +6,7 @@ on:
     branches: [ "main" ]
 
 env:
-  PYTHON_VERSION: 3.10.14
+  PYTHON_VERSION: 3.10.11
 
 permissions:
   contents: write
