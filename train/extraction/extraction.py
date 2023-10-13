@@ -60,6 +60,7 @@ class IDataManager(ABC):
 class DataManager(IDataManager):
     def get_pdf_files(self, pdfs_directory_path: str) -> List[Path]:
         pdfs = [p for p in Path(pdfs_directory_path).iterdir() if p.is_file() and p.suffix == ".pdf"]
+        pdfs.sort()
         return pdfs
 
     def save_image(self, image_bytes_io: io.BytesIO, image_path: str) -> None:
