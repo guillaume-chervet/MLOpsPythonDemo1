@@ -12,7 +12,8 @@ env:
   AZURE_ML_WORKSPACE_NAME: "cats-dogs-yola"
 
 permissions:
-  contents: write
+  id-token: write
+  contents: read
 jobs:
 
   train_unit_tests:
