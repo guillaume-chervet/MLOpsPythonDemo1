@@ -18,4 +18,3 @@ chmod +x ./init_dataset.sh
 ./init_dataset.sh "$AZURE_RESOURCE_GROUP_NAME" "$AZURE_ML_WORKSPACE_NAME"
 cd $cwd
 
-#poetry run python azureml_run_pipeline.py --subscription_id $AZURE_SUBSCRIPTION_ID --resource_group_name $AZURE_RESOURCE_GROUP_NAME --workspace_name $AZURE_ML_WORKSPACE_NAME --location $AZURE_LOCATION
