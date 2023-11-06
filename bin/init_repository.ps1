@@ -1,33 +1,24 @@
+# Script based on https://www.techwatching.dev/posts/scripting-azure-ready-github-repository/
 # Initialize git repository with current code
 # You should have added the main.yml workflow file in the `.github\workflows` directory 
 
-#.\init_repository.ps1 -repositoryName "MLOpsPythonMyDemo" -workspaceName "RobertCarry22" -environmentName "MLOpsPython"
+#.\init_repository.ps1 -repositoryName "MLOpsPythonMyDemo" -environmentName "MLOpsPython"
 param (
     [string]$repositoryName = "MLOpsPythonMyDemo",
-    [string]$workspaceName = "RobertCarry22",
     [string]$environmentName = "MLOpsPython"
 )
 
 az login
 gh auth login
 
-# Create a new remote private GitHub repository
-#git init --initial-branch=main
-#git add .
-#git commit -m "Intialize repository with the GitHub Actions workflow file"
-#gh repo create $repositoryName --remote=upstream --private --source=. --push
-# Retrieve the repository full name (org/repo)
-#$repositoryFullName=$(gh repo view --json nameWithOwner -q ".nameWithOwner") 
-
 # Fork MLOPsPython repository
 gh repo fork https://github.com/guillaume-chervet/MLOpsPythonDemo1 --default-branch-only --fork-name $repositoryName --clone
-# Retrieve the repository full name (org/repo)
-$repositoryFullName="$workspaceName/$repositoryName"
-#git clone https://github.com/$repositoryFullName
-
 cd $repositoryName
 git remote remove upstream
 git push --set-upstream origin main
+
+# Retrieve the repository full name (org/repo)
+$repositoryFullName=$(gh repo view --json nameWithOwner -q ".nameWithOwner")
 
 gh repo set-default "https://github.com/${repositoryFullName}"
 
@@ -59,9 +50,6 @@ $parametersJson=@{
 # Change parameters to single line string with escaped quotes to make it work with Azure CLI
 # https://medium.com/medialesson/use-dynamic-json-strings-with-azure-cli-commands-in-powershell-b191eccc8e9b
 $parameters=$($parametersJson | ConvertTo-Json -Depth 100 -Compress).Replace("`"", "\`"")
-
-echo $parameters
-echo $appId
 
 # Create federated credentials
 az ad app federated-credential create --id $appId --parameters $parameters

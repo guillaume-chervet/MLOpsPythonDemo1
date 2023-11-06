@@ -1,9 +1,9 @@
-#.\init_repository.sh "MLOpsPythonMyDemo" "RobertCarry22" "MLOpsPython"
+# Script based on https://www.techwatching.dev/posts/scripting-azure-ready-github-repository/
+#.\init_repository.sh "MLOpsPythonMyDemo" "MLOpsPython"
 
 # Définir les paramètres avec des valeurs par défaut
 repositoryName="${1:-MLOpsPythonMyDemo}"
-workspaceName="${2:-RobertCarry22}"
-environmentName="${3:-MLOpsPython}"
+environmentName="${2:-MLOpsPython}"
 
 # Authenticate using Azure CLI (az) and GitHub CLI (gh)
 az login
@@ -12,15 +12,15 @@ gh auth login
 # Fork MLOpsPython repository
 gh repo fork https://github.com/guillaume-chervet/MLOpsPythonDemo1 --default-branch-only --fork-name "$repositoryName" --clone
 
-# Retrieve the repository full name (org/repo)
-repositoryFullName="$workspaceName/$repositoryName"
-
 # Change directory to the local repository
 cd "$repositoryName"
 
 # Remove the upstream remote and set the upstream to the main branch
 git remote remove upstream
 git push --set-upstream origin main
+
+# Retrieve the repository full name (org/repo)
+repositoryFullName=$(gh repo view --json nameWithOwner -q ".nameWithOwner")
 
 # Set the default repository
 gh repo set-default "https://github.com/${repositoryFullName}"
