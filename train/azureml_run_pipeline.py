@@ -62,7 +62,7 @@ ml_client.begin_create_or_update(cluster_basic).result()
 def azureml_pipeline(pdfs_input_data: Input(type=AssetTypes.URI_FOLDER)):
     extraction_step = load_component(source="extraction/command.yaml")
     extraction = extraction_step(
-        pdfs_input=pdfs_input_data, tags=tags
+        pdfs_input=pdfs_input_data
     )
 
     return {
