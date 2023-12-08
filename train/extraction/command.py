@@ -13,6 +13,7 @@ parser.add_argument("--hash_output", type=str)
 args = parser.parse_args()
 pdfs_input = args.pdfs_input
 images_output = args.images_output
+hash_output = args.hash_output
 
 extract_images = ExtractImages(DataManager())
 result = extract_images.extract_images(pdfs_input, images_output)
