@@ -99,6 +99,8 @@ pipeline_job = ml_client.jobs.create_or_update(
 
 ml_client.jobs.stream(pipeline_job.name)
 
+credential.get_token("https://management.azure.com/.default")
+
 register_extracted_dataset(
     ml_client, custom_extraction_hash_path, custom_extraction_path, tags
 )
