@@ -18,10 +18,7 @@ outputs:
   hash_output:
     type: uri_folder
 
-environment:
-  name: extraction_environment
-  build:
-    path: ./
+environment: azureml:extraction_environment@latest
 
 code: ./
 command: >-

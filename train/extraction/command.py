@@ -3,7 +3,7 @@ from pathlib import Path
 
 from directory_hash import hash_dir
 from extraction import DataManager, ExtractImages
-import mlflow
+#import mlflow
 
 parser = argparse.ArgumentParser("extraction")
 parser.add_argument("--pdfs_input", type=str)
@@ -27,5 +27,5 @@ console_output = f"""
     number_images_output: {result.number_images_output}
     computed_hash: {computed_hash}
 """
-mlflow.log_metric("number_files_input", result.number_files_input)
-mlflow.log_metric("number_images_output", result.number_images_output)
+#mlflow.log_metric("number_files_input", result.number_files_input)
+#mlflow.log_metric("number_images_output", result.number_images_output)

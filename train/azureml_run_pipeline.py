@@ -6,7 +6,7 @@ from azure.identity import DefaultAzureCredential, InteractiveBrowserCredential
 
 from azure.ai.ml import MLClient, Input, Output, load_component
 from azure.ai.ml.dsl import pipeline
-from azure.ai.ml.entities import AmlCompute
+from azure.ai.ml.entities import AmlCompute, Environment, BuildContext
 from azure.ai.ml.constants import AssetTypes
 
 from extraction import register_extracted_dataset
@@ -57,6 +57,12 @@ cluster_basic = AmlCompute(
 )
 ml_client.begin_create_or_update(cluster_basic).result()
 
+env_docker_context = Environment(
+    build=BuildContext(path="extraction"),
+    name="extraction_environment",
+    description="Environment created from a Docker context.",
+)
+ml_client.environments.create_or_update(env_docker_context)
 
 @pipeline(default_compute=cluster_name)
 def azureml_pipeline(pdfs_input_data: Input(type=AssetTypes.URI_FOLDER)):
