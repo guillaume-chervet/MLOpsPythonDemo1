@@ -58,14 +58,14 @@ cluster_basic = AmlCompute(
 ml_client.begin_create_or_update(cluster_basic).result()
 
 job_env = Environment(
-    build=BuildContext(path="extraction"),
+    build=BuildContext(path="extraction/docker-context"),
     name="extraction_environment",
     description="Environment created from a Docker context.",
 )
-#ml_client.environments.create_or_update(job_env)
-#print(
-#    f"Environment with name {job_env.name} is registered to workspace, the environment version is {job_env.version}"
-#)
+ml_client.environments.create_or_update(job_env)
+print(
+    f"Environment with name {job_env.name} is registered to workspace, the environment version is {job_env.version}"
+)
 
 @pipeline(default_compute=cluster_name)
 def azureml_pipeline(pdfs_input_data: Input(type=AssetTypes.URI_FOLDER)):
