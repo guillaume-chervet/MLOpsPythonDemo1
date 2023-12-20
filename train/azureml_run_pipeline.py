@@ -57,16 +57,6 @@ cluster_basic = AmlCompute(
 )
 ml_client.begin_create_or_update(cluster_basic).result()
 
-job_env = Environment(
-    build=BuildContext(path="extraction/docker-context"),
-    name="extraction_environment",
-    description="Environment created from a Docker context.",
-)
-ml_client.environments.create_or_update(job_env)
-print(
-    f"Environment with name {job_env.name} is registered to workspace, the environment version is {job_env.version}"
-)
-
 @pipeline(default_compute=cluster_name)
 def azureml_pipeline(pdfs_input_data: Input(type=AssetTypes.URI_FOLDER)):
     extraction_step = load_component(source="extraction/command.yaml")
@@ -74,9 +64,14 @@ def azureml_pipeline(pdfs_input_data: Input(type=AssetTypes.URI_FOLDER)):
         pdfs_input=pdfs_input_data
     )
 
+    output_step = load_component(source="output/command.yaml")
+    output = output_step(
+        extraction_hash_input=extraction.outputs.hash_output,
+        extraction_images_input=extraction.outputs.images_output,
+    )
+
     return {
-        "extraction_output": extraction.outputs.images_output,
-        "extraction_hash_output": extraction.outputs.hash_output,
+        "output": output.outputs.main_output,
     }
 
 
@@ -88,17 +83,11 @@ pipeline_job = azureml_pipeline(
 
 azure_blob = "azureml://datastores/workspaceblobstore/paths/"
 experiment_id = str(uuid.uuid4())
-custom_extraction_path = (
+custom_output_path = (
     azure_blob + "extraction/cats-dogs-others/" + experiment_id + "/"
 )
-pipeline_job.outputs.extraction_output = Output(
-    type=AssetTypes.URI_FOLDER, mode="rw_mount", path=custom_extraction_path
-)
-custom_extraction_hash_path = (
-    azure_blob + "extraction_hash/cats-dogs-others/" + experiment_id + "/"
-)
-pipeline_job.outputs.extraction_hash_output = Output(
-    type=AssetTypes.URI_FOLDER, mode="rw_mount", path=custom_extraction_hash_path
+pipeline_job.outputs.output = Output(
+    type=AssetTypes.URI_FOLDER, mode="rw_mount", path=custom_output_path
 )
 
 pipeline_job = ml_client.jobs.create_or_update(
@@ -108,8 +97,6 @@ pipeline_job = ml_client.jobs.create_or_update(
 
 ml_client.jobs.stream(pipeline_job.name)
 
-credential.get_token("https://management.azure.com/.default")
-
 register_extracted_dataset(
-    ml_client, custom_extraction_hash_path, custom_extraction_path, tags
+    ml_client, custom_output_path, tags
 )

@@ -3,13 +3,13 @@ import azure.ai.ml._artifacts._artifact_utilities as artifact_utils
 from azure.ai.ml.constants import AssetTypes
 from azure.ai.ml.entities import Data
 
+
 def register_extracted_dataset(ml_client,
-                                        custom_extraction_hash_path:str,
-                                        custom_extraction_path:str,
-                                        tags:dict):
+                               custom_output_path: str,
+                               tags: dict):
     BASE_PATH = Path(__file__).resolve().parent
     artifact_utils.download_artifact_from_aml_uri(
-        uri=custom_extraction_hash_path,
+        uri=custom_output_path + "extraction_hash",
         destination=str(BASE_PATH),
         datastore_operation=ml_client.datastores,
     )
@@ -45,7 +45,7 @@ def register_extracted_dataset(ml_client,
     if not hash_tag_already_exists:
         extracted_images_dataset = Data(
             name=extracted_images_dataset_name,
-            path=custom_extraction_path,
+            path=custom_output_path + "extraction_images",
             type=AssetTypes.CUSTOM_MODEL,
             description="Extracted images for cats and dogs and others",
             version=str(version_dataset_extraction),

@@ -23,14 +23,14 @@ async def main():
     api_url = 'https://axaguildev-ecotag.azurewebsites.net/api/server'
     api_information = ApiInformation(api_url=api_url, jwt_token=jwt_token)
 
-    dataset = Dataset(dataset_name='cats_dogs_others9',
+    dataset = Dataset(dataset_name='cats_dogs_others10',
                       dataset_type='Image',
                       team_name='cats_dogs_others',
                       directory=dataset_path,
                       classification='Public')
     await create_dataset(dataset, api_information)
 
-    project = Project(project_name='cats_dogs_others9',
+    project = Project(project_name='cats_dogs_others10',
                       dataset_name=dataset.dataset_name,
                       team_name='cats_dogs_others',
                       annotationType='ImageClassifier',
