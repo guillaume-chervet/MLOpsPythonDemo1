@@ -31,7 +31,7 @@ gh api --method PUT -H "Accept: application/vnd.github+json" "repos/${repository
 # Retrieve the current subscription and current tenant identifiers using Azure CLI
 subscriptionId=$(az account show --query "id" -o tsv)
 tenantId=$(az account show --query "tenantId" -o tsv)
-credentials=$(az ad sp create-for-rbac --name "mlapp" --role contributor --scopes "/subscriptions/$subscriptionId" --sdk-auth)
+credentials=$(az ad sp create-for-rbac --name "mlappdemo" --role contributor --scopes "/subscriptions/$subscriptionId" --sdk-auth)
 # Create an App Registration and its associated service principal using Azure CLI
 #appId=$(az ad app create --display-name "GitHub Action OIDC for ${repositoryFullName}" --query "appId" -o tsv)
 #servicePrincipalId=$(az ad sp create --id "$appId" --query "id" -o tsv)
