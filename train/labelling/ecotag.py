@@ -65,7 +65,9 @@ async def create_dataset(dataset: Dataset, api_information: ApiInformation):
         dataset_id = await get_dataset_id(api_url, dataset_name, headers, session)
 
         # Upload image files in the directory.
+        print("start uploading files")
         for filename in os.listdir(directory):
+            print(f'Uploading file: {filename}')
             if filename.endswith(".jpg") or filename.endswith(".png"):
                 data = FormData()
                 data.add_field('files',
@@ -86,6 +88,7 @@ async def create_dataset(dataset: Dataset, api_information: ApiInformation):
 async def get_team_id(api_url, headers, session, team_name):
     team_id = None
     async with session.get(f'{api_url}/Groups', headers=headers) as response:
+        print(f'Get teams status: {response.status}')
         teams = await response.json()
         for team in teams:
             if team['name'] == team_name:
