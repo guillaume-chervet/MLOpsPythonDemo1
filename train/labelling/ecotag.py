@@ -12,7 +12,6 @@ class ApiInformation:
     api_url: str
     access_token: str
 
-
 @dataclass
 class Dataset:
     dataset_name: str
@@ -20,8 +19,7 @@ class Dataset:
     team_name: str
     directory: str
     classification: str = "Public"
-
-
+    
 @dataclass
 class Label:
     name: str

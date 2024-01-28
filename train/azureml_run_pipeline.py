@@ -58,13 +58,14 @@ cluster_basic = AmlCompute(
 ml_client.begin_create_or_update(cluster_basic).result()
 
 @pipeline(default_compute=cluster_name)
+
 def azureml_pipeline(pdfs_input_data: Input(type=AssetTypes.URI_FOLDER),
                      labels_input_data: Input(type=AssetTypes.URI_FOLDER),):
+
     extraction_step = load_component(source="extraction/command.yaml")
     extraction = extraction_step(
         pdfs_input=pdfs_input_data
     )
-
     label_split_data_step = load_component(source="label_split_data/command.yaml")
     label_split_data = label_split_data_step(
         labels_input=labels_input_data,
@@ -90,6 +91,15 @@ pipeline_job = azureml_pipeline(
     labels_input_data=Input(
         path="azureml:cats_dogs_others_labels:1", type=AssetTypes.URI_FOLDER
     ),
+)
+
+azure_blob = "azureml://datastores/workspaceblobstore/paths/"
+experiment_id = str(uuid.uuid4())
+custom_output_path = (
+    azure_blob + "extraction/cats-dogs-others/" + experiment_id + "/"
+)
+pipeline_job.outputs.output = Output(
+    type=AssetTypes.URI_FOLDER, mode="rw_mount", path=custom_output_path
 )
 
 azure_blob = "azureml://datastores/workspaceblobstore/paths/"
