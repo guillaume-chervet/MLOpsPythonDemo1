@@ -9,7 +9,8 @@ from azure.ai.ml.dsl import pipeline
 from azure.ai.ml.entities import AmlCompute
 from azure.ai.ml.constants import AssetTypes
 
-from extraction_dataset import register_extracted_dataset, RegisterExtractedDataset
+from extraction_dataset import register_extracted_dataset
+from create_labelling_project import DownloadAndCreateLabellingProject, download_and_create_labelling_project
 
 parser = argparse.ArgumentParser("train")
 parser.add_argument("--subscription_id", type=str)
@@ -118,13 +119,20 @@ pipeline_job = ml_client.jobs.create_or_update(
 
 ml_client.jobs.stream(pipeline_job.name)
 
-register_extracted_dataset(
+registered_dataset = register_extracted_dataset(
     ml_client,
     custom_output_path,
     {**tags, experiment_id: experiment_id},
-    RegisterExtractedDataset(
+)
+
+if registered_dataset is not None:
+    create_project = DownloadAndCreateLabellingProject(
         subscription_id=subscription_id,
         resource_group_name=resource_group_name,
         workspace_name=workspace_name,
     )
-)
+    download_and_create_labelling_project(
+        registered_dataset.dataset_version,
+        registered_dataset.dataset_name,
+        create_project,
+    )

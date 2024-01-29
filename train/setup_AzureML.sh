@@ -20,6 +20,5 @@ chmod +x ./init_dataset.sh
 cd $cwd
 
 # Initialize Azure ML Labels Dataset
-cd ./labelling
 chmod +x ./run_download_labels.sh
 ./run_download_labels.sh "$AZURE_RESOURCE_GROUP_NAME" "$AZURE_ML_WORKSPACE_NAME"

@@ -4,24 +4,17 @@ from pathlib import Path
 import azure.ai.ml._artifacts._artifact_utilities as artifact_utils
 from azure.ai.ml.constants import AssetTypes
 from azure.ai.ml.entities import Data
-from labelling.create_project import CreateProject, create_ecotag_project
-from dataset import download
+
 
 @dataclass
 class RegisterExtractedDataset:
-    labelling_api_url = "https://axaguildev-ecotag.azurewebsites.net/api/server"
-    oidc_token_endpoint = "https://demo.duendesoftware.com/connect/token"
-    oidc_client_id = "m2m"
-    oidc_client_secret = "secret"
-    subscription_id: str
-    resource_group_name: str
-    workspace_name: str
+    dataset_version: str
+    dataset_name: str
 
 
 def register_extracted_dataset(ml_client,
                                custom_output_path: str,
-                               tags: dict,
-                               register_extracted_dataset: RegisterExtractedDataset):
+                               tags: dict) -> RegisterExtractedDataset | None:
     base_path = Path(__file__).resolve().parent
 
     artifact_utils.download_artifact_from_aml_uri(
@@ -68,28 +61,10 @@ def register_extracted_dataset(ml_client,
             tags={"hash": computed_hash, **tags},
         )
         extracted_images_dataset = ml_client.data.create_or_update(extracted_images_dataset)
-
-        async def create_project_async():
-            subscription_id = register_extracted_dataset.subscription_id
-            resource_group_name = register_extracted_dataset.resource_group_name
-            workspace_name = register_extracted_dataset.workspace_name
-            dataset_name = extracted_images_dataset.name
-            dataset_version = extracted_images_dataset.version
-
-            dataset_path = download(subscription_id, resource_group_name, workspace_name, dataset_name, dataset_version)
-
-            create_project = CreateProject(
-                dataset_directory=dataset_path,
-                dataset_version=str(version_dataset_extraction),
-                api_url=register_extracted_dataset.labelling_api_url,
-                token_endpoint=register_extracted_dataset.oidc_token_endpoint,
-                client_id=register_extracted_dataset.oidc_client_id,
-                client_secret=register_extracted_dataset.oidc_client_secret
-            )
-            await create_ecotag_project(create_project)
-
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(create_project_async())
         print(
             f"Dataset with name {extracted_images_dataset.name} was registered to workspace, the dataset version is {extracted_images_dataset.version}"
         )
+        return RegisterExtractedDataset(dataset_version=extracted_images_dataset.version,
+                                        dataset_name=extracted_images_dataset.name)
+
+    return None
