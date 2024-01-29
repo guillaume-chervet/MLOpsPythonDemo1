@@ -6,7 +6,7 @@ from azure.identity import DefaultAzureCredential, InteractiveBrowserCredential
 
 from azure.ai.ml import MLClient, Input, Output, load_component
 from azure.ai.ml.dsl import pipeline
-from azure.ai.ml.entities import AmlCompute, Environment, BuildContext
+from azure.ai.ml.entities import AmlCompute
 from azure.ai.ml.constants import AssetTypes
 
 from extraction_dataset import register_extracted_dataset, RegisterExtractedDataset

@@ -9,10 +9,10 @@ from dataset import download
 
 @dataclass
 class RegisterExtractedDataset:
-    api_url = "https://axaguildev-ecotag.azurewebsites.net/api/server"
-    token_endpoint = "https://demo.duendesoftware.com/connect/token"
-    client_id = "m2m"
-    client_secret = "secret"
+    labelling_api_url = "https://axaguildev-ecotag.azurewebsites.net/api/server"
+    oidc_token_endpoint = "https://demo.duendesoftware.com/connect/token"
+    oidc_client_id = "m2m"
+    oidc_client_secret = "secret"
     subscription_id: str
     resource_group_name: str
     workspace_name: str
@@ -81,10 +81,10 @@ def register_extracted_dataset(ml_client,
             create_project = CreateProject(
                 dataset_directory=dataset_path,
                 dataset_version=str(version_dataset_extraction),
-                api_url=register_extracted_dataset.api_url,
-                token_endpoint=register_extracted_dataset.token_endpoint,
-                client_id=register_extracted_dataset.client_id,
-                client_secret=register_extracted_dataset.client_secret
+                api_url=register_extracted_dataset.labelling_api_url,
+                token_endpoint=register_extracted_dataset.oidc_token_endpoint,
+                client_id=register_extracted_dataset.oidc_client_id,
+                client_secret=register_extracted_dataset.oidc_client_secret
             )
             await create_ecotag_project(create_project)
 
