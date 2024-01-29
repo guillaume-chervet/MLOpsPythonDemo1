@@ -9,7 +9,7 @@ from azure.ai.ml.dsl import pipeline
 from azure.ai.ml.entities import AmlCompute, Environment, BuildContext
 from azure.ai.ml.constants import AssetTypes
 
-from extraction import register_extracted_dataset
+from extraction_dataset import register_extracted_dataset
 
 parser = argparse.ArgumentParser("train")
 parser.add_argument("--subscription_id", type=str)
@@ -113,11 +113,11 @@ pipeline_job.outputs.output = Output(
 
 pipeline_job = ml_client.jobs.create_or_update(
     pipeline_job, experiment_name="cats_dos_others_pipeline",
-    tags=tags
+    tags={**tags, experiment_id: experiment_id}
 )
 
 ml_client.jobs.stream(pipeline_job.name)
 
 register_extracted_dataset(
-    ml_client, custom_output_path, tags
+    ml_client, custom_output_path, {**tags, experiment_id: experiment_id}
 )
