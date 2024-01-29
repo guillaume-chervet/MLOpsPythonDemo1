@@ -7,9 +7,9 @@ on:
 
 env:
   PYTHON_VERSION: 3.10.11
-  AZURE_RESOURCE_GROUP_NAME: "azure-ml-yolj"
+  AZURE_RESOURCE_GROUP_NAME: "azure-ml-yolm"
   AZURE_LOCATION: "northeurope"
-  AZURE_ML_WORKSPACE_NAME: "cats-dogs-yolj"
+  AZURE_ML_WORKSPACE_NAME: "cats-dogs-yolm"
 
 permissions:
   id-token: write

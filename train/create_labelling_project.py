@@ -70,14 +70,14 @@ async def create_labelling_project(create_ecotag_project: CreateProject):
 
     api_information = ApiInformation(api_url=api_url, access_token=access_token)
 
-    dataset = Dataset(dataset_name='cats_dogs_others_v ' + dataset_version,
+    dataset = Dataset(dataset_name='cats_dogs_others_v' + dataset_version,
                       dataset_type='Image',
                       team_name='cats_dogs_others',
                       directory=dataset_directory,
                       classification='Public')
     await create_dataset(dataset, api_information)
 
-    project = Project(project_name='cats_dogs_others_v ' + dataset_version,
+    project = Project(project_name='cats_dogs_others_v' + dataset_version,
                       dataset_name=dataset.dataset_name,
                       team_name='cats_dogs_others',
                       annotationType='ImageClassifier',
@@ -90,9 +90,8 @@ async def create_labelling_project(create_ecotag_project: CreateProject):
 if __name__ == "__main__":
     async def main():
         parser = argparse.ArgumentParser("labelling")
-        parser.add_argument("--dataset_version", type=str)
-        parser.add_argument("--dataset_name", type=str)
-        parser.add_argument("--api_url", type=str)
+        parser.add_argument("--dataset_version", type=str, default="1")
+        parser.add_argument("--api_url", type=str, default="https://axaguildev-ecotag.azurewebsites.net/api/server")
         parser.add_argument(
             "--token_endpoint",
             type=str,
@@ -103,18 +102,18 @@ if __name__ == "__main__":
 
         args = parser.parse_args()
         dataset_version = args.dataset_version
-        dataset_name = args.dataset_name
         api_url = args.api_url
         token_endpoint = args.token_endpoint
         client_id = args.client_id
         client_secret = args.client_secret
 
+        dataset_directory = "./dataset"
         create_project = CreateProject(api_url=api_url,
                                        token_endpoint=token_endpoint,
                                        client_id=client_id,
                                        dataset_version=dataset_version,
                                        client_secret=client_secret,
-                                       dataset_directory=dataset_name)
+                                       dataset_directory=dataset_directory)
         await create_labelling_project(create_project)
 
 
