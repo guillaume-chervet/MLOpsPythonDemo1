@@ -163,7 +163,7 @@ async def create_project(project: Project, api_information: ApiInformation):
 
 async def get_project_id(api_url, project_name, headers, session):
     async with session.get(f"{api_url}/projects", headers=headers) as response:
-        if response.code > 400:
+        if response.status > 400:
             print("Error: ", response.code, response.reason)
             return None
         projects = await response.json()

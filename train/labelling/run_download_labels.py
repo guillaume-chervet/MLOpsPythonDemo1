@@ -28,15 +28,15 @@ parser.add_argument("--client_id", type=str, default="m2m")
 parser.add_argument("--client_secret", type=str, default="secret")
 
 args = parser.parse_args()
-acess_token = args.access_token
+access_token = args.access_token
 project_name = args.project_name
 api_url = args.api_url
 token_endpoint = args.token_endpoint
 client_id = args.client_id
 client_secret = args.client_secret
 
-if acess_token == "":
-    acess_token = get_access_token(token_endpoint, client_id, client_secret)
+if access_token == "":
+    access_token = get_access_token(token_endpoint, client_id, client_secret)
 
 
 async def main():
@@ -45,7 +45,7 @@ async def main():
     filename = "cats-dogs-others-classification-annotations.json"
     dataset_path.mkdir(exist_ok=True)
 
-    api_information = ApiInformation(api_url=api_url, access_token=acess_token)
+    api_information = ApiInformation(api_url=api_url, access_token=access_token)
     await download_annotations(
         api_information, project_name, str(dataset_path), filename
     )

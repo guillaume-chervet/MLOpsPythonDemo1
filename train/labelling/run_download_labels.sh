@@ -3,7 +3,6 @@ workspace_name=$2
 dataset_name=cats_dogs_others_labels
 dataset_version=1
 
-az login
 poetry run python run_download_labels.py \
   --project_name "cats_dogs_others_classification" \
   --api_url "https://axaguildev-ecotag.azurewebsites.net/api/server"
