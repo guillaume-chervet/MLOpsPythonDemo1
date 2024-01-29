@@ -22,4 +22,4 @@ cd $cwd
 cd ./labelling
 poetry install
 chmod +x ./run_download_labels.sh
-./init_dataset.sh "$AZURE_RESOURCE_GROUP_NAME" "$AZURE_ML_WORKSPACE_NAME"
+./run_download_labels.sh "$AZURE_RESOURCE_GROUP_NAME" "$AZURE_ML_WORKSPACE_NAME"
