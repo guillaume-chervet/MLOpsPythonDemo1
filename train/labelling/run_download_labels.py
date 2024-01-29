@@ -2,7 +2,7 @@ import argparse
 import asyncio
 from pathlib import Path
 
-from ecotag import (
+from ecotag_sdk import (
     ApiInformation,
     download_annotations,
     get_access_token,

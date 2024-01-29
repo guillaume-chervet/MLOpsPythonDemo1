@@ -70,9 +70,22 @@ def register_extracted_dataset(ml_client,
         extracted_images_dataset = ml_client.data.create_or_update(extracted_images_dataset)
 
         async def create_project_async():
-            create_project = CreateProject(**register_extracted_dataset.__dict__,
-                                           dataset_name=extracted_images_dataset_name,
-                                           dataset_version=str(version_dataset_extraction))
+            subscription_id = register_extracted_dataset.subscription_id
+            resource_group_name = register_extracted_dataset.resource_group_name
+            workspace_name = register_extracted_dataset.workspace_name
+            dataset_name = extracted_images_dataset.name
+            dataset_version = extracted_images_dataset.version
+
+            dataset_path = download(subscription_id, resource_group_name, workspace_name, dataset_name, dataset_version)
+
+            create_project = CreateProject(
+                dataset_directory=dataset_path,
+                dataset_version=str(version_dataset_extraction),
+                api_url=register_extracted_dataset.api_url,
+                token_endpoint=register_extracted_dataset.token_endpoint,
+                client_id=register_extracted_dataset.client_id,
+                client_secret=register_extracted_dataset.client_secret
+            )
             await create_ecotag_project(create_project)
 
         loop = asyncio.get_event_loop()
