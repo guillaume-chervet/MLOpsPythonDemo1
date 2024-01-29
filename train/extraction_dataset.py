@@ -1,12 +1,27 @@
+import asyncio
+from dataclasses import dataclass
 from pathlib import Path
 import azure.ai.ml._artifacts._artifact_utilities as artifact_utils
 from azure.ai.ml.constants import AssetTypes
 from azure.ai.ml.entities import Data
+from labelling.create_project import CreateProject, create_ecotag_project
+
+
+@dataclass
+class RegisterExtractedDataset:
+    api_url = "https://axaguildev-ecotag.azurewebsites.net/api/server"
+    token_endpoint = "https://demo.duendesoftware.com/connect/token"
+    client_id = "m2m"
+    client_secret = "secret"
+    subscription_id: str
+    resource_group_name: str
+    workspace_name: str
 
 
 def register_extracted_dataset(ml_client,
                                custom_output_path: str,
-                               tags: dict):
+                               tags: dict,
+                               register_extracted_dataset: RegisterExtractedDataset):
     base_path = Path(__file__).resolve().parent
 
     artifact_utils.download_artifact_from_aml_uri(
@@ -43,7 +58,7 @@ def register_extracted_dataset(ml_client,
             if extracted_images_dataset_version == computed_hash:
                 hash_tag_already_exists = True
 
-    if not hash_tag_already_exists:
+    if not hash_tag_already_exists and "git_head_ref" in tags:  # and tags["git_head_ref"] == "main":
         extracted_images_dataset = Data(
             name=extracted_images_dataset_name,
             path=custom_output_path + "extraction_images",
@@ -53,7 +68,15 @@ def register_extracted_dataset(ml_client,
             tags={"hash": computed_hash, **tags},
         )
         extracted_images_dataset = ml_client.data.create_or_update(extracted_images_dataset)
-        # TODO create dataset and project in ecotag automatically
+
+        async def create_project_async():
+            create_project = CreateProject(**register_extracted_dataset.__dict__,
+                                           dataset_name=extracted_images_dataset_name,
+                                           dataset_version=str(version_dataset_extraction))
+            await create_ecotag_project(create_project)
+
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(create_project_async())
         print(
             f"Dataset with name {extracted_images_dataset.name} was registered to workspace, the dataset version is {extracted_images_dataset.version}"
         )

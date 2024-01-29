@@ -26,7 +26,7 @@ def download(subscription_id: str,
         resource_group_name=resource_group_name,
         workspace_name=workspace_name,
     )
-    data_info = ml_client.data.get(dataset_name, version=dataset_version)*
+    data_info = ml_client.data.get(dataset_name, version=dataset_version)
     base_path = Path(__file__).resolve().parent
     output_images_directory = base_path / "dataset"
     if not output_images_directory.exists():

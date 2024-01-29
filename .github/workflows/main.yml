@@ -73,6 +73,6 @@ jobs:
               ${{ env.AZURE_RESOURCE_GROUP_NAME }} \
               ${{ env.AZURE_ML_WORKSPACE_NAME }} \
               ${{ env.AZURE_LOCATION }} \
-              "{\"git\":\"${{ github.head_ref }}.${{ github.sha }}\",\"version\":\"${{ needs.tags.outputs.new_version }}\",\"triggering_actor\":\"${{github.triggering_actor}}\"}"
+              "{\"git_head_ref\":\"${{ github.head_ref }}\",\"git\":\"${{ github.head_ref }}.${{ github.sha }}\",\"version\":\"${{ needs.tags.outputs.new_version }}\",\"triggering_actor\":\"${{github.triggering_actor}}\"}"
 
       working-directory: train
