@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 
 from ecotag_sdk.ecotag import get_access_token, ApiInformation, create_dataset, Dataset, Project, create_project, Label
-from dataset import download
 
 
 @dataclass
