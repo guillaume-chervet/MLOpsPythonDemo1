@@ -1,7 +1,7 @@
 cwd=$(pwd)
 
 cd train
-poetry install
+poetry install --no-root
 
 cd $cwd
 
