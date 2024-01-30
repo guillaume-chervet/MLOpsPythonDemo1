@@ -2,7 +2,11 @@ import argparse
 import asyncio
 from dataclasses import dataclass
 
-from ecotag_sdk.ecotag import get_access_token, ApiInformation, create_dataset, Dataset, Project, create_project, Label
+from ecotag_sdk.ecotag import (get_access_token,
+                               ApiInformation,
+                               get_dataset,
+                               get_project,
+                               create_dataset, Dataset, Project, create_project, Label)
 
 from dataset import download
 
@@ -31,7 +35,7 @@ async def download_and_create_labelling_project(
     oidc_client_id = download_and_create_labelling_project.oidc_client_id
     oidc_client_secret = download_and_create_labelling_project.oidc_client_secret
     dataset_path = download(subscription_id, resource_group_name, workspace_name, dataset_name, dataset_version)
-
+    print(f"dataset_path: {dataset_path}")
     create_project = CreateProject(
         dataset_directory=dataset_path,
         dataset_version=dataset_version,
@@ -68,12 +72,23 @@ async def create_labelling_project(create_ecotag_project: CreateProject):
 
     api_information = ApiInformation(api_url=api_url, access_token=access_token)
 
-    dataset = Dataset(dataset_name='cats_dogs_others_v' + dataset_version,
+    dataset_name = 'cats_dogs_others_v' + dataset_version
+    current_dataset = await get_dataset(api_information, dataset_name)
+    if current_dataset is not None:
+        print(f"Dataset with name {dataset_name} already exists")
+        return
+
+    dataset = Dataset(dataset_name=dataset_name,
                       dataset_type='Image',
                       team_name='cats_dogs_others',
                       directory=dataset_directory,
                       classification='Public')
     await create_dataset(dataset, api_information)
+
+    current_project = await get_project(api_information, dataset_name)
+    if current_project is not None:
+        print(f"Project with name {dataset_name} already exists")
+        return
 
     project = Project(project_name='cats_dogs_others_v' + dataset_version,
                       dataset_name=dataset.dataset_name,
