@@ -18,32 +18,30 @@ class DownloadAndCreateLabellingProject:
     workspace_name: str
 
 
-def download_and_create_labelling_project(
+async def download_and_create_labelling_project(
         dataset_version: str,
         dataset_name: str,
         download_and_create_labelling_project: DownloadAndCreateLabellingProject):
-    async def create_project_async():
-        subscription_id = download_and_create_labelling_project.subscription_id
-        resource_group_name = download_and_create_labelling_project.resource_group_name
-        workspace_name = download_and_create_labelling_project.workspace_name
-        labelling_api_url = download_and_create_labelling_project.labelling_api_url
-        oidc_token_endpoint = download_and_create_labelling_project.oidc_token_endpoint
-        oidc_client_id = download_and_create_labelling_project.oidc_client_id
-        oidc_client_secret = download_and_create_labelling_project.oidc_client_secret
-        dataset_path = download(subscription_id, resource_group_name, workspace_name, dataset_name, dataset_version)
 
-        create_project = CreateProject(
-            dataset_directory=dataset_path,
-            dataset_version=dataset_version,
-            api_url=labelling_api_url,
-            token_endpoint=oidc_token_endpoint,
-            client_id=oidc_client_id,
-            client_secret=oidc_client_secret
-        )
-        await create_labelling_project(create_project)
+    subscription_id = download_and_create_labelling_project.subscription_id
+    resource_group_name = download_and_create_labelling_project.resource_group_name
+    workspace_name = download_and_create_labelling_project.workspace_name
+    labelling_api_url = download_and_create_labelling_project.labelling_api_url
+    oidc_token_endpoint = download_and_create_labelling_project.oidc_token_endpoint
+    oidc_client_id = download_and_create_labelling_project.oidc_client_id
+    oidc_client_secret = download_and_create_labelling_project.oidc_client_secret
+    dataset_path = download(subscription_id, resource_group_name, workspace_name, dataset_name, dataset_version)
 
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(create_project_async())
+    create_project = CreateProject(
+        dataset_directory=dataset_path,
+        dataset_version=dataset_version,
+        api_url=labelling_api_url,
+        token_endpoint=oidc_token_endpoint,
+        client_id=oidc_client_id,
+        client_secret=oidc_client_secret
+    )
+    await create_labelling_project(create_project)
+
 
 @dataclass
 class CreateProject:
@@ -70,14 +68,14 @@ async def create_labelling_project(create_ecotag_project: CreateProject):
 
     api_information = ApiInformation(api_url=api_url, access_token=access_token)
 
-    dataset = Dataset(dataset_name='cats_dogs_others_v' + dataset_version,
+    dataset = Dataset(dataset_name='cats_dogs_others_u' + dataset_version,
                       dataset_type='Image',
                       team_name='cats_dogs_others',
                       directory=dataset_directory,
                       classification='Public')
     await create_dataset(dataset, api_information)
 
-    project = Project(project_name='cats_dogs_others_v' + dataset_version,
+    project = Project(project_name='cats_dogs_others_u' + dataset_version,
                       dataset_name=dataset.dataset_name,
                       team_name='cats_dogs_others',
                       annotationType='ImageClassifier',
@@ -107,15 +105,19 @@ if __name__ == "__main__":
         client_id = args.client_id
         client_secret = args.client_secret
 
-        dataset_directory = "./dataset"
-        create_project = CreateProject(api_url=api_url,
-                                       token_endpoint=token_endpoint,
-                                       client_id=client_id,
-                                       dataset_version=dataset_version,
-                                       client_secret=client_secret,
-                                       dataset_directory=dataset_directory)
-        await create_labelling_project(create_project)
-
+        #dataset_directory = "./dataset"
+        #create_project = CreateProject(api_url=api_url,
+        #                               token_endpoint=token_endpoint,
+        #                               client_id=client_id,
+        #                               dataset_version=dataset_version,
+        #                               client_secret=client_secret,
+        #                               dataset_directory=dataset_directory)
+        #await create_labelling_project(create_project)
+        await download_and_create_labelling_project(dataset_version, "cats_dogs_others", DownloadAndCreateLabellingProject(
+            subscription_id="9d42c9d4-85ab-429d-afb4-4d77f309078c",
+            resource_group_name="azure-ml-yolm",
+            workspace_name="cats-dogs-yolm",
+        ))
 
     loop = asyncio.get_event_loop()
     loop.run_until_complete(main())

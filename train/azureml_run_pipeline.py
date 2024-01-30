@@ -1,4 +1,5 @@
 import argparse
+import asyncio
 import json
 import uuid
 
@@ -131,8 +132,12 @@ if registered_dataset is not None:
         resource_group_name=resource_group_name,
         workspace_name=workspace_name,
     )
-    download_and_create_labelling_project(
-        registered_dataset.dataset_version,
-        registered_dataset.dataset_name,
-        create_project,
-    )
+    async def execute_async():
+        await download_and_create_labelling_project(
+            registered_dataset.dataset_version,
+            registered_dataset.dataset_name,
+            create_project,
+        )
+
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(execute_async())
