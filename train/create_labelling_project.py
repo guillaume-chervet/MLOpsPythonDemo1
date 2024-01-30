@@ -68,14 +68,14 @@ async def create_labelling_project(create_ecotag_project: CreateProject):
 
     api_information = ApiInformation(api_url=api_url, access_token=access_token)
 
-    dataset = Dataset(dataset_name='cats_dogs_others_u' + dataset_version,
+    dataset = Dataset(dataset_name='cats_dogs_others_v' + dataset_version,
                       dataset_type='Image',
                       team_name='cats_dogs_others',
                       directory=dataset_directory,
                       classification='Public')
     await create_dataset(dataset, api_information)
 
-    project = Project(project_name='cats_dogs_others_u' + dataset_version,
+    project = Project(project_name='cats_dogs_others_v' + dataset_version,
                       dataset_name=dataset.dataset_name,
                       team_name='cats_dogs_others',
                       annotationType='ImageClassifier',

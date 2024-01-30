@@ -62,9 +62,9 @@ def register_extracted_dataset(ml_client,
         )
         extracted_images_dataset = ml_client.data.create_or_update(extracted_images_dataset)
         print(
-            f"Dataset with name {extracted_images_dataset.name} was registered to workspace, the dataset version is {extracted_images_dataset.version}"
+            f"Dataset with name {extracted_images_dataset_name} was registered to workspace, the dataset version is {extracted_images_dataset.version}"
         )
         return RegisterExtractedDataset(dataset_version=extracted_images_dataset.version,
-                                        dataset_name=extracted_images_dataset.name)
+                                        dataset_name=extracted_images_dataset_name)
 
     return None

@@ -27,7 +27,6 @@ workspace_name = args.workspace_name
 location = args.location
 tags = json.loads(args.tags)
 
-
 try:
     credential = DefaultAzureCredential()
     # Check if given credential can get token successfully.
@@ -52,18 +51,17 @@ cluster_basic = AmlCompute(
     name=cluster_name,
     type="amlcompute",
     size="Standard_D4s_v3",
-    location=location, #az account list-locations -o table
+    location=location,  # az account list-locations -o table
     min_instances=0,
     max_instances=1,
     idle_time_before_scale_down=60,
 )
 ml_client.begin_create_or_update(cluster_basic).result()
 
+
 @pipeline(default_compute=cluster_name)
-
 def azureml_pipeline(pdfs_input_data: Input(type=AssetTypes.URI_FOLDER),
-                     labels_input_data: Input(type=AssetTypes.URI_FOLDER),):
-
+                     labels_input_data: Input(type=AssetTypes.URI_FOLDER), ):
     extraction_step = load_component(source="extraction/command.yaml")
     extraction = extraction_step(
         pdfs_input=pdfs_input_data
@@ -98,7 +96,7 @@ pipeline_job = azureml_pipeline(
 azure_blob = "azureml://datastores/workspaceblobstore/paths/"
 experiment_id = str(uuid.uuid4())
 custom_output_path = (
-    azure_blob + "extraction/cats-dogs-others/" + experiment_id + "/"
+        azure_blob + "extraction/cats-dogs-others/" + experiment_id + "/"
 )
 pipeline_job.outputs.output = Output(
     type=AssetTypes.URI_FOLDER, mode="rw_mount", path=custom_output_path
@@ -107,7 +105,7 @@ pipeline_job.outputs.output = Output(
 azure_blob = "azureml://datastores/workspaceblobstore/paths/"
 experiment_id = str(uuid.uuid4())
 custom_output_path = (
-    azure_blob + "extraction/cats-dogs-others/" + experiment_id + "/"
+        azure_blob + "extraction/cats-dogs-others/" + experiment_id + "/"
 )
 pipeline_job.outputs.output = Output(
     type=AssetTypes.URI_FOLDER, mode="rw_mount", path=custom_output_path
@@ -132,6 +130,7 @@ if registered_dataset is not None:
         resource_group_name=resource_group_name,
         workspace_name=workspace_name,
     )
+
     async def execute_async():
         await download_and_create_labelling_project(
             registered_dataset.dataset_version,

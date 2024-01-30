@@ -31,6 +31,10 @@ def download(subscription_id: str,
     output_images_directory = base_path / "dataset"
     if not output_images_directory.exists():
         output_images_directory.mkdir()
-    artifact_utils.download_artifact_from_aml_uri(uri=data_info.path, destination=str(output_images_directory),
-                                                           datastore_operation=ml_client.datastores)
+    artifact_utils.download_artifact_from_aml_uri(uri=data_info.path,
+                                                  destination=str(output_images_directory),
+                                                  datastore_operation=ml_client.datastores)
+    print("Downloaded dataset name: " + dataset_name + " version: " + dataset_version)
+    print(f"output_images_directory: {output_images_directory}")
+
     return output_images_directory
