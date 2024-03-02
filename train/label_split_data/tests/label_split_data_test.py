@@ -3,7 +3,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import MagicMock
 
-from label_split_data import DataSplit, LabelSplitDataInput, IDataRandom, DataRandom, IDataManager, DataManager
+from label_split_data import DataSplit, LabelSplitDataInput, DataRandom, IDataManager, DataManager
 
 BASE_PATH = Path(__file__).resolve().parent
 output_images_directory = BASE_PATH / "output_images"
