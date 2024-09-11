@@ -1,6 +1,6 @@
 /tests
-/dataset-cats-dogs-others
 *.sh
 *.yml
 *.yaml
 *.ipynb
+/dataset-cats-dogs-others-labels
