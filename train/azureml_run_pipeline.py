@@ -73,6 +73,11 @@ def azureml_pipeline(pdfs_input_data: Input(type=AssetTypes.URI_FOLDER),
         images_input=extraction.outputs.images_output,
     )
 
+    train_step = load_component(source="train/command.yaml")
+    train_data = train_step(
+        split_images_input=label_split_data.outputs.split_images_output
+    )
+
     output_step = load_component(source="output/command.yaml")
     output = output_step(
         extraction_hash_input=extraction.outputs.hash_output,
